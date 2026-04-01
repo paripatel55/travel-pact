@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Alignment Prototype</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <p class="eyebrow">Design Thinking Prototype</p>
+      <h1>Trip Alignment Pact</h1>
+      <p class="subtitle">
+        A lightweight prototype to test whether making expectations explicit before booking reduces
+        trust and planning friction in student travel groups.
+      </p>
+    </header>
+
+    <section id="step-1" class="card step active">
+      <h2>1) Create Trip Room</h2>
+      <p class="helper">Start with basic context so your preferences are grounded in one trip scenario.</p>
+
+      <div class="grid">
+        <label>
+          Destination
+          <input id="destination" type="text" placeholder="e.g., San Diego" required>
+        </label>
+        <label>
+          Trip Length (days)
+          <input id="days" type="number" min="1" max="30" value="4">
+        </label>
+        <label>
+          Group Size
+          <input id="group-size" type="number" min="2" max="12" value="3">
+        </label>
+      </div>
+
+      <button id="to-step-2" class="btn">Continue to Alignment Questions</button>
+    </section>
+
+    <section id="step-2" class="card step">
+      <h2>2) Personal Alignment Questions</h2>
+      <p class="helper">
+        Rate each item from 1 to 5. This prototype focuses on three key variables:
+        <strong>pace</strong>, <strong>budget flexibility</strong>, and <strong>social style</strong>.
+      </p>
+      <form id="question-form" class="questions"></form>
+      <div class="row">
+        <button id="back-to-1" class="btn btn-secondary" type="button">Back</button>
+        <button id="to-step-3" class="btn" type="button">Compare With Sample Teammates</button>
+      </div>
+    </section>
+
+    <section id="step-3" class="card step">
+      <h2>3) Pick Teammates to Compare</h2>
+      <p class="helper">Choose 1-2 sample traveler profiles to simulate group dynamics for your test.</p>
+      <div id="teammate-list" class="teammate-list"></div>
+      <div class="row">
+        <button id="back-to-2" class="btn btn-secondary" type="button">Back</button>
+        <button id="generate-results" class="btn" type="button">Generate Alignment + Trip Pact</button>
+      </div>
+    </section>
+
+    <section id="step-4" class="card step">
+      <h2>4) Results: Alignment + Trip Pact</h2>
+      <div id="result-header" class="result-header"></div>
+      <div id="alignment-table"></div>
+      <div id="tension-points" class="result-block"></div>
+      <div id="trip-pact" class="result-block"></div>
+      <div class="row">
+        <button id="back-to-3" class="btn btn-secondary" type="button">Back</button>
+        <button id="restart" class="btn" type="button">Start New Scenario</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
