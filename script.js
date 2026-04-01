@@ -17,7 +17,10 @@ const teammateProfiles = [
     description: "High-energy traveler who wants full itineraries.",
     pace: 5,
     budget: 4,
-    social: 3
+    social: 3,
+    mustHaves: ["adventure day", "sunrise viewpoint"],
+    hardNos: ["all-day beach"],
+    flexAreas: ["dinner spots"]
   },
   {
     id: "chill",
@@ -25,7 +28,10 @@ const teammateProfiles = [
     description: "Wants relaxed pacing and clear cost boundaries.",
     pace: 2,
     budget: 2,
-    social: 4
+    social: 4,
+    mustHaves: ["beach downtime", "budget meals"],
+    hardNos: ["packed schedules", "late-night bars"],
+    flexAreas: ["museum stop"]
   },
   {
     id: "social",
@@ -33,7 +39,10 @@ const teammateProfiles = [
     description: "Optimizes for shared group experiences and vibes.",
     pace: 3,
     budget: 3,
-    social: 5
+    social: 5,
+    mustHaves: ["group dinner", "night market"],
+    hardNos: ["splitting all day"],
+    flexAreas: ["activity order"]
   }
 ];
 
@@ -43,7 +52,9 @@ const state = {
   groupSize: 3,
   answers: {},
   selectedTeammates: [],
-  customTeammates: []
+  customTeammates: [],
+  selfScores: { pace: 3, budget: 3, social: 3 },
+  userPrefs: { mustHaves: [], hardNos: [], flexAreas: [] }
 };
 let customTeammateCounter = 1;
 
@@ -103,6 +114,7 @@ function renderTeammates() {
       </label>
       <p>${profile.description}</p>
       <p class="meta">Pace ${profile.pace}/5 • Budget ${profile.budget}/5 • Social ${profile.social}/5</p>
+      <p class="meta"><strong>Must:</strong> ${(profile.mustHaves || []).join(", ") || "None"}<br><strong>Hard no:</strong> ${(profile.hardNos || []).join(", ") || "None"}<br><strong>Flex:</strong> ${(profile.flexAreas || []).join(", ") || "None"}</p>
     `;
     list.appendChild(card);
   });
@@ -133,10 +145,50 @@ function computeVariableScores(answers) {
   };
 }
 
+function renderSelfScoreBlocks(scores) {
+  const content = `
+    <h3>Your Current Scores</h3>
+    <p class="meta">Use these as your reference if a teammate wants to manually enter their profile.</p>
+    <p><strong>Pace:</strong> ${scores.pace} / 5 &nbsp;|&nbsp; <strong>Budget:</strong> ${scores.budget} / 5 &nbsp;|&nbsp; <strong>Social:</strong> ${scores.social} / 5</p>
+  `;
+
+  const preview = document.getElementById("self-score-preview");
+  const stepThreePreview = document.getElementById("step-3-self-score");
+  preview.innerHTML = content;
+  stepThreePreview.innerHTML = content;
+}
+
+function updateSelfScoresFromForm() {
+  state.answers = collectAnswers();
+  state.selfScores = computeVariableScores(state.answers);
+  renderSelfScoreBlocks(state.selfScores);
+}
+
 function getSelectedTeammates() {
   const checked = Array.from(document.querySelectorAll('#teammate-list input[type="checkbox"]:checked'));
   const allProfiles = [...teammateProfiles, ...state.customTeammates];
   return checked.map((item) => allProfiles.find((p) => p.id === item.value)).filter(Boolean);
+}
+
+function parseListInput(value) {
+  if (!value.trim()) return [];
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .slice(0, 3);
+}
+
+function normalizeItem(item) {
+  return item.toLowerCase().replace(/[^a-z0-9\s]/g, "").replace(/\s+/g, " ").trim();
+}
+
+function collectUserPrefs() {
+  state.userPrefs = {
+    mustHaves: parseListInput(document.getElementById("user-must").value),
+    hardNos: parseListInput(document.getElementById("user-hard").value),
+    flexAreas: parseListInput(document.getElementById("user-flex").value)
+  };
 }
 
 function addCustomTeammate() {
@@ -144,6 +196,9 @@ function addCustomTeammate() {
   const pace = Number(document.getElementById("new-pace").value);
   const budget = Number(document.getElementById("new-budget").value);
   const social = Number(document.getElementById("new-social").value);
+  const mustHaves = parseListInput(document.getElementById("new-must").value);
+  const hardNos = parseListInput(document.getElementById("new-hard").value);
+  const flexAreas = parseListInput(document.getElementById("new-flex").value);
 
   if (!name) {
     alert("Please add a teammate name.");
@@ -164,7 +219,10 @@ function addCustomTeammate() {
     description: "Custom teammate profile",
     pace,
     budget,
-    social
+    social,
+    mustHaves,
+    hardNos,
+    flexAreas
   });
   customTeammateCounter += 1;
 
@@ -172,6 +230,9 @@ function addCustomTeammate() {
   document.getElementById("new-pace").value = "3";
   document.getElementById("new-budget").value = "3";
   document.getElementById("new-social").value = "3";
+  document.getElementById("new-must").value = "";
+  document.getElementById("new-hard").value = "";
+  document.getElementById("new-flex").value = "";
   renderTeammates();
 }
 
@@ -182,8 +243,11 @@ function levelFromGap(gap) {
 }
 
 function buildResults() {
-  const selfScores = computeVariableScores(state.answers);
-  const people = [{ name: "You", ...selfScores }, ...state.selectedTeammates];
+  const selfScores = state.selfScores;
+  const people = [
+    { name: "You", ...selfScores, ...state.userPrefs },
+    ...state.selectedTeammates
+  ];
 
   const groups = ["pace", "budget", "social"].map((key) => {
     const values = people.map((p) => p[key]);
@@ -191,13 +255,13 @@ function buildResults() {
     const max = Math.max(...values);
     const gap = Number((max - min).toFixed(2));
     const avg = Number((values.reduce((a, b) => a + b, 0) / values.length).toFixed(2));
-    return { key, avg, gap, level: levelFromGap(gap) };
+    return { key, avg, min, max, gap, level: levelFromGap(gap) };
   });
 
   renderResultHeader(groups);
   renderAlignmentTable(people, groups);
-  renderTensionPoints(groups);
-  renderTripPact(groups, selfScores);
+  renderTensionPoints(groups, people);
+  renderTripPact(groups, selfScores, people);
 }
 
 function renderResultHeader(groups) {
@@ -215,12 +279,15 @@ function renderResultHeader(groups) {
 
 function renderAlignmentTable(people, groups) {
   const tableRoot = document.getElementById("alignment-table");
+  const budgetGroup = groups.find((g) => g.key === "budget");
   const rows = groups
     .map(
       (g) => `
       <tr>
         <td>${variableLabels[g.key]}</td>
         <td>${g.avg}</td>
+        <td>${g.min}</td>
+        <td>${g.max}</td>
         <td>${g.gap}</td>
         <td><span class="${g.level.className}">${g.level.label}</span></td>
       </tr>
@@ -233,12 +300,24 @@ function renderAlignmentTable(people, groups) {
     .join(" | ");
 
   tableRoot.innerHTML = `
+    <div class="result-block">
+      <h3>How to Read These Scores</h3>
+      <ul>
+        <li>Each score is on a <strong>1-5 scale</strong>. For budget, <strong>1</strong> means very cost-strict and <strong>5</strong> means very flexible with spending.</li>
+        <li>Decimals (like <strong>3.67</strong>) are averages from three question ratings, not currency amounts.</li>
+        <li><strong>Min</strong> is the lowest person score in the group. <strong>Max</strong> is the highest.</li>
+        <li><strong>Gap = Max - Min</strong>. Bigger gap means bigger preference differences and higher friction risk.</li>
+        <li>Example: Budget Avg ${budgetGroup.avg}, Min ${budgetGroup.min}, Max ${budgetGroup.max}, so Gap is ${budgetGroup.gap}.</li>
+      </ul>
+    </div>
     <p><strong>Profiles:</strong> ${peopleInfo}</p>
     <table>
       <thead>
         <tr>
           <th>Variable</th>
           <th>Group Average</th>
+          <th>Min</th>
+          <th>Max</th>
           <th>Gap (Max-Min)</th>
           <th>Status</th>
         </tr>
@@ -248,10 +327,31 @@ function renderAlignmentTable(people, groups) {
   `;
 }
 
-function renderTensionPoints(groups) {
+function getPreferenceClashes(people) {
+  const clashes = [];
+
+  for (let i = 0; i < people.length; i += 1) {
+    for (let j = 0; j < people.length; j += 1) {
+      if (i === j) continue;
+      const a = people[i];
+      const b = people[j];
+      const bHardNos = new Set((b.hardNos || []).map(normalizeItem));
+      (a.mustHaves || []).forEach((must) => {
+        if (bHardNos.has(normalizeItem(must))) {
+          clashes.push(`${a.name} must-have "${must}" conflicts with ${b.name} hard no.`);
+        }
+      });
+    }
+  }
+
+  return clashes;
+}
+
+function renderTensionPoints(groups, people) {
   const tension = document.getElementById("tension-points");
   const risks = groups.filter((g) => g.level.label === "Friction Risk");
   const watches = groups.filter((g) => g.level.label === "Watch");
+  const clashes = getPreferenceClashes(people);
 
   let items = [];
   risks.forEach((r) => {
@@ -269,13 +369,20 @@ function renderTensionPoints(groups) {
     items = ["No major tension signals detected. This group appears strongly aligned on key variables."];
   }
 
+  if (clashes.length > 0) {
+    items.push(`Direct preference conflicts detected: ${clashes.length}.`);
+    clashes.slice(0, 4).forEach((clash) => items.push(clash));
+  } else {
+    items.push("No direct must-have vs hard no conflicts were detected.");
+  }
+
   tension.innerHTML = `
     <h3>Tension Forecast</h3>
     <ul>${items.map((i) => `<li>${i}</li>`).join("")}</ul>
   `;
 }
 
-function renderTripPact(groups, selfScores) {
+function renderTripPact(groups, selfScores, people) {
   const pact = document.getElementById("trip-pact");
 
   const pace = groups.find((g) => g.key === "pace");
@@ -294,11 +401,32 @@ function renderTripPact(groups, selfScores) {
       : "Set one daily check-in to keep everyone aligned."
   ];
 
+  const allMustHaves = people.flatMap((p) => p.mustHaves || []).map(normalizeItem);
+  const mustHaveCounts = {};
+  allMustHaves.forEach((item) => {
+    if (!item) return;
+    mustHaveCounts[item] = (mustHaveCounts[item] || 0) + 1;
+  });
+  const sharedMustHaves = Object.entries(mustHaveCounts)
+    .filter(([, count]) => count >= 2)
+    .map(([item]) => item)
+    .slice(0, 3);
+
+  const protectedHardNos = [...new Set(people.flatMap((p) => p.hardNos || []).map(normalizeItem))]
+    .filter(Boolean)
+    .slice(0, 4);
+  const flexPool = [...new Set(people.flatMap((p) => p.flexAreas || []).map(normalizeItem))]
+    .filter(Boolean)
+    .slice(0, 4);
+
   pact.innerHTML = `
     <h3>Your Trip Alignment Pact</h3>
     <ul>
       <li><strong>Destination:</strong> ${state.destination}</li>
       <li><strong>Your baseline profile:</strong> pace ${selfScores.pace}, budget ${selfScores.budget}, social ${selfScores.social}</li>
+      <li><strong>Shared must-haves:</strong> ${sharedMustHaves.length ? sharedMustHaves.join(", ") : "No overlap yet - discuss top priorities together."}</li>
+      <li><strong>Protected hard no's:</strong> ${protectedHardNos.length ? protectedHardNos.join(", ") : "None listed yet."}</li>
+      <li><strong>Flex zones:</strong> ${flexPool.length ? flexPool.join(", ") : "None listed yet."}</li>
       ${rules.map((r) => `<li>${r}</li>`).join("")}
       <li><strong>Fallback rule:</strong> If disagreement lasts over 10 minutes, default to the pre-tagged low-cost, low-effort option.</li>
     </ul>
@@ -312,6 +440,8 @@ function resetFlow() {
   state.answers = {};
   state.selectedTeammates = [];
   state.customTeammates = [];
+  state.selfScores = { pace: 3, budget: 3, social: 3 };
+  state.userPrefs = { mustHaves: [], hardNos: [], flexAreas: [] };
   customTeammateCounter = 1;
 
   document.getElementById("destination").value = "";
@@ -324,14 +454,24 @@ function resetFlow() {
   document.getElementById("new-pace").value = "3";
   document.getElementById("new-budget").value = "3";
   document.getElementById("new-social").value = "3";
+  document.getElementById("new-must").value = "";
+  document.getElementById("new-hard").value = "";
+  document.getElementById("new-flex").value = "";
+  document.getElementById("user-must").value = "";
+  document.getElementById("user-hard").value = "";
+  document.getElementById("user-flex").value = "";
   renderQuestions();
   renderTeammates();
+  renderSelfScoreBlocks(state.selfScores);
   showStep("step-1");
 }
 
 function init() {
   renderQuestions();
   renderTeammates();
+  renderSelfScoreBlocks(state.selfScores);
+
+  document.getElementById("question-form").addEventListener("change", updateSelfScoresFromForm);
 
   document.getElementById("to-step-2").addEventListener("click", () => {
     const destination = document.getElementById("destination").value.trim();
@@ -354,7 +494,8 @@ function init() {
   document.getElementById("back-to-3").addEventListener("click", () => showStep("step-3"));
 
   document.getElementById("to-step-3").addEventListener("click", () => {
-    state.answers = collectAnswers();
+    updateSelfScoresFromForm();
+    collectUserPrefs();
     showStep("step-3");
   });
 

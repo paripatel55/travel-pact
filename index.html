@@ -42,10 +42,29 @@
     <section id="step-2" class="card step">
       <h2>2) Personal Alignment Questions</h2>
       <p class="helper">
-        Rate each item from 1 to 5. We focus on three key variables:
+        <strong>Required:</strong> Rate each item from 1 to 5. We focus on three key variables:
         <strong>pace</strong>, <strong>budget flexibility</strong>, and <strong>social style</strong>.
       </p>
       <form id="question-form" class="questions"></form>
+      <div id="self-score-preview" class="result-block"></div>
+      <div class="custom-teammate-form">
+        <h3>Preference Details (Optional but Recommended)</h3>
+        <p class="helper">Optional input, max 3 items each. Add comma-separated items. Examples are included to help you start quickly.</p>
+        <div class="grid">
+          <label>
+            Must-haves
+            <input id="user-must" type="text" placeholder="e.g., 2 beach days, street food, sunset hike">
+          </label>
+          <label>
+            Hard no's
+            <input id="user-hard" type="text" placeholder="e.g., no hostels, no clubbing, no red-eye flights">
+          </label>
+          <label>
+            Flex areas
+            <input id="user-flex" type="text" placeholder="e.g., wake-up time, museum days, dinner budget">
+          </label>
+        </div>
+      </div>
       <div class="row">
         <button id="back-to-1" class="btn btn-secondary" type="button">Back</button>
         <button id="to-step-3" class="btn" type="button">Compare With Teammates</button>
@@ -54,7 +73,8 @@
 
     <section id="step-3" class="card step">
       <h2>3) Pick Teammates to Compare</h2>
-      <p class="helper">Select teammates below, or add your own and score them directly.</p>
+      <p class="helper">Select teammates below, or add your own and score them directly. Scores are required; detail fields are optional.</p>
+      <div id="step-3-self-score" class="result-block"></div>
       <div class="custom-teammate-form">
         <h3>Add Teammate</h3>
         <div class="grid">
@@ -73,6 +93,18 @@
           <label>
             Social (1-5)
             <input id="new-social" type="number" min="1" max="5" value="3">
+          </label>
+          <label>
+            Must-haves (optional)
+            <input id="new-must" type="text" placeholder="e.g., one adventure day, local food">
+          </label>
+          <label>
+            Hard no's (optional)
+            <input id="new-hard" type="text" placeholder="e.g., no nightlife, no expensive tours">
+          </label>
+          <label>
+            Flex areas (optional)
+            <input id="new-flex" type="text" placeholder="e.g., brunch spots, shopping time">
           </label>
         </div>
         <button id="add-teammate" class="btn btn-secondary" type="button">+ Add Teammate</button>
