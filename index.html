@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trip Alignment Prototype</title>
+  <title>Trip Alignment Pact</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main class="app">
     <header class="hero">
-      <p class="eyebrow">Design Thinking Prototype</p>
+      <p class="eyebrow">Pre-trip alignment</p>
       <h1>Trip Alignment Pact</h1>
       <p class="subtitle">
-        A lightweight prototype to test whether making expectations explicit before booking reduces
-        trust and planning friction in student travel groups.
+        Make pace, budget, and social expectations clear before you book—so your group can plan with
+        less friction and more trust.
       </p>
     </header>
 
@@ -42,19 +42,41 @@
     <section id="step-2" class="card step">
       <h2>2) Personal Alignment Questions</h2>
       <p class="helper">
-        Rate each item from 1 to 5. This prototype focuses on three key variables:
+        Rate each item from 1 to 5. We focus on three key variables:
         <strong>pace</strong>, <strong>budget flexibility</strong>, and <strong>social style</strong>.
       </p>
       <form id="question-form" class="questions"></form>
       <div class="row">
         <button id="back-to-1" class="btn btn-secondary" type="button">Back</button>
-        <button id="to-step-3" class="btn" type="button">Compare With Sample Teammates</button>
+        <button id="to-step-3" class="btn" type="button">Compare With Teammates</button>
       </div>
     </section>
 
     <section id="step-3" class="card step">
       <h2>3) Pick Teammates to Compare</h2>
-      <p class="helper">Choose 1-2 sample traveler profiles to simulate group dynamics for your test.</p>
+      <p class="helper">Select teammates below, or add your own and score them directly.</p>
+      <div class="custom-teammate-form">
+        <h3>Add Teammate</h3>
+        <div class="grid">
+          <label>
+            Name
+            <input id="new-name" type="text" placeholder="e.g., Sam">
+          </label>
+          <label>
+            Pace (1-5)
+            <input id="new-pace" type="number" min="1" max="5" value="3">
+          </label>
+          <label>
+            Budget (1-5)
+            <input id="new-budget" type="number" min="1" max="5" value="3">
+          </label>
+          <label>
+            Social (1-5)
+            <input id="new-social" type="number" min="1" max="5" value="3">
+          </label>
+        </div>
+        <button id="add-teammate" class="btn btn-secondary" type="button">+ Add Teammate</button>
+      </div>
       <div id="teammate-list" class="teammate-list"></div>
       <div class="row">
         <button id="back-to-2" class="btn btn-secondary" type="button">Back</button>

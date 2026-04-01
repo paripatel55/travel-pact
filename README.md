@@ -1,12 +1,12 @@
-# Travel Project Prototype
+# Trip Alignment Pact
 
-This is a Design Thinking prototype for testing pre-trip alignment in student travel groups.
+A simple web experience for pre-trip alignment in student travel groups.
 
-## What it demonstrates
+## What it does
 
-- Isolates key variables: trip pace, budget flexibility, social style
-- Lets users compare themselves with sample teammate profiles
-- Generates a tension forecast and a "Trip Alignment Pact"
+- Surfaces three variables: trip pace, budget flexibility, social style
+- Lets you compare your answers with traveler profiles
+- Generates a tension forecast and a Trip Alignment Pact
 
 ## Run locally
 

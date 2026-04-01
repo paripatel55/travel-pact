@@ -42,8 +42,10 @@ const state = {
   days: 4,
   groupSize: 3,
   answers: {},
-  selectedTeammates: []
+  selectedTeammates: [],
+  customTeammates: []
 };
+let customTeammateCounter = 1;
 
 const variableLabels = {
   pace: "Trip Pace",
@@ -85,14 +87,18 @@ function renderQuestions() {
 
 function renderTeammates() {
   const list = document.getElementById("teammate-list");
+  const previouslyChecked = Array.from(
+    document.querySelectorAll('#teammate-list input[type="checkbox"]:checked')
+  ).map((item) => item.value);
   list.innerHTML = "";
 
-  teammateProfiles.forEach((profile) => {
+  const allProfiles = [...teammateProfiles, ...state.customTeammates];
+  allProfiles.forEach((profile) => {
     const card = document.createElement("div");
     card.className = "teammate-card";
     card.innerHTML = `
       <label>
-        <input type="checkbox" value="${profile.id}">
+        <input type="checkbox" value="${profile.id}" ${previouslyChecked.includes(profile.id) ? "checked" : ""}>
         <h3>${profile.name}</h3>
       </label>
       <p>${profile.description}</p>
@@ -129,7 +135,44 @@ function computeVariableScores(answers) {
 
 function getSelectedTeammates() {
   const checked = Array.from(document.querySelectorAll('#teammate-list input[type="checkbox"]:checked'));
-  return checked.map((item) => teammateProfiles.find((p) => p.id === item.value)).filter(Boolean);
+  const allProfiles = [...teammateProfiles, ...state.customTeammates];
+  return checked.map((item) => allProfiles.find((p) => p.id === item.value)).filter(Boolean);
+}
+
+function addCustomTeammate() {
+  const name = document.getElementById("new-name").value.trim();
+  const pace = Number(document.getElementById("new-pace").value);
+  const budget = Number(document.getElementById("new-budget").value);
+  const social = Number(document.getElementById("new-social").value);
+
+  if (!name) {
+    alert("Please add a teammate name.");
+    return;
+  }
+
+  if (
+    Number.isNaN(pace) || Number.isNaN(budget) || Number.isNaN(social) ||
+    pace < 1 || pace > 5 || budget < 1 || budget > 5 || social < 1 || social > 5
+  ) {
+    alert("Pace, budget, and social scores must be between 1 and 5.");
+    return;
+  }
+
+  state.customTeammates.push({
+    id: `custom-${customTeammateCounter}`,
+    name: `${name} (Added)`,
+    description: "Custom teammate profile",
+    pace,
+    budget,
+    social
+  });
+  customTeammateCounter += 1;
+
+  document.getElementById("new-name").value = "";
+  document.getElementById("new-pace").value = "3";
+  document.getElementById("new-budget").value = "3";
+  document.getElementById("new-social").value = "3";
+  renderTeammates();
 }
 
 function levelFromGap(gap) {
@@ -252,7 +295,7 @@ function renderTripPact(groups, selfScores) {
   ];
 
   pact.innerHTML = `
-    <h3>Trip Alignment Pact (Prototype Output)</h3>
+    <h3>Your Trip Alignment Pact</h3>
     <ul>
       <li><strong>Destination:</strong> ${state.destination}</li>
       <li><strong>Your baseline profile:</strong> pace ${selfScores.pace}, budget ${selfScores.budget}, social ${selfScores.social}</li>
@@ -268,6 +311,8 @@ function resetFlow() {
   state.groupSize = 3;
   state.answers = {};
   state.selectedTeammates = [];
+  state.customTeammates = [];
+  customTeammateCounter = 1;
 
   document.getElementById("destination").value = "";
   document.getElementById("days").value = "4";
@@ -275,7 +320,12 @@ function resetFlow() {
   document.querySelectorAll('#teammate-list input[type="checkbox"]').forEach((i) => {
     i.checked = false;
   });
+  document.getElementById("new-name").value = "";
+  document.getElementById("new-pace").value = "3";
+  document.getElementById("new-budget").value = "3";
+  document.getElementById("new-social").value = "3";
   renderQuestions();
+  renderTeammates();
   showStep("step-1");
 }
 
@@ -308,10 +358,12 @@ function init() {
     showStep("step-3");
   });
 
+  document.getElementById("add-teammate").addEventListener("click", addCustomTeammate);
+
   document.getElementById("generate-results").addEventListener("click", () => {
     const selected = getSelectedTeammates();
-    if (selected.length === 0 || selected.length > 2) {
-      alert("Select 1 or 2 teammate profiles for this prototype test.");
+    if (selected.length === 0 || selected.length > 4) {
+      alert("Select between 1 and 4 teammate profiles to continue.");
       return;
     }
     state.selectedTeammates = selected;
