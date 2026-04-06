@@ -447,7 +447,7 @@ function renderDiscovery() {
           Compare with my profile
         </label>
         <button type="button" class="btn btn-secondary btn-connect" data-connect-id="${t.id}" data-connect-name="${t.name.replace(/"/g, "&quot;")}">
-          Connect (demo)
+          Connect
         </button>
       </div>
     `;
