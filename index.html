@@ -12,8 +12,8 @@
       <p class="eyebrow">Pre-trip alignment</p>
       <h1>Trip Alignment Pact</h1>
       <p class="subtitle">
-        Make pace, budget, and social expectations clear before you book—so your group can plan with
-        less friction and more trust.
+        Find travelers planning similar trips, then check pace, budget, social style, and how you handle
+        tension—before you commit.
       </p>
     </header>
 
@@ -36,11 +36,25 @@
         </label>
       </div>
 
-      <button id="to-step-2" class="btn">Continue to Alignment Questions</button>
+      <button id="to-boundary" class="btn">Continue to Boundary Moments</button>
+    </section>
+
+    <section id="step-boundary" class="card step">
+      <h2>2) Boundary Moments (PAC'T)</h2>
+      <p class="helper">
+        When money, timing, or group pressure kicks in, people behave differently. Pick what you would
+        most likely do—there are no right answers.
+      </p>
+      <form id="boundary-form" class="questions"></form>
+      <div id="boundary-preview" class="result-block"></div>
+      <div class="row">
+        <button id="back-from-boundary" class="btn btn-secondary" type="button">Back</button>
+        <button id="to-alignment" class="btn" type="button">Continue to Alignment Questions</button>
+      </div>
     </section>
 
     <section id="step-2" class="card step">
-      <h2>2) Personal Alignment Questions</h2>
+      <h2>3) Personal Alignment Questions</h2>
       <p class="helper">
         <strong>Required:</strong> Rate each item from 1 to 5. We focus on three key variables:
         <strong>pace</strong>, <strong>budget flexibility</strong>, and <strong>social style</strong>.
@@ -66,17 +80,22 @@
         </div>
       </div>
       <div class="row">
-        <button id="back-to-1" class="btn btn-secondary" type="button">Back</button>
-        <button id="to-step-3" class="btn" type="button">Compare With Teammates</button>
+        <button id="back-to-boundary" class="btn btn-secondary" type="button">Back</button>
+        <button id="to-discovery" class="btn" type="button">Find Travelers &amp; Compare</button>
       </div>
     </section>
 
     <section id="step-3" class="card step">
-      <h2>3) Pick Teammates to Compare</h2>
-      <p class="helper">Select teammates below, or add your own and score them directly. Scores are required; detail fields are optional.</p>
+      <h2>4) Discover Travelers &amp; Compare</h2>
+      <p class="helper">
+        Select 1–2 people to compare with your profile. Cards are sorted by fit with your trip and scores.
+        You can also add someone manually below.
+      </p>
       <div id="step-3-self-score" class="result-block"></div>
+      <div id="discovery-feed" class="discovery-feed"></div>
       <div class="custom-teammate-form">
-        <h3>Add Teammate</h3>
+        <h3>Add Teammate Manually</h3>
+        <p class="helper">Use this if someone is not in the list.</p>
         <div class="grid">
           <label>
             Name
@@ -109,25 +128,37 @@
         </div>
         <button id="add-teammate" class="btn btn-secondary" type="button">+ Add Teammate</button>
       </div>
-      <div id="teammate-list" class="teammate-list"></div>
+      <div id="custom-teammate-chips" class="custom-chips"></div>
       <div class="row">
-        <button id="back-to-2" class="btn btn-secondary" type="button">Back</button>
+        <button id="back-to-alignment" class="btn btn-secondary" type="button">Back</button>
         <button id="generate-results" class="btn" type="button">Generate Alignment + Trip Pact</button>
       </div>
     </section>
 
     <section id="step-4" class="card step">
-      <h2>4) Results: Alignment + Trip Pact</h2>
+      <h2>5) Results: Alignment + Trip Pact</h2>
       <div id="result-header" class="result-header"></div>
       <div id="alignment-table"></div>
       <div id="tension-points" class="result-block"></div>
       <div id="trip-pact" class="result-block"></div>
       <div class="row">
-        <button id="back-to-3" class="btn btn-secondary" type="button">Back</button>
+        <button id="back-to-discovery" class="btn btn-secondary" type="button">Back</button>
         <button id="restart" class="btn" type="button">Start New Scenario</button>
       </div>
     </section>
   </main>
+
+  <div id="connect-modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel" role="dialog" aria-labelledby="modal-title">
+      <h3 id="modal-title">Connect (prototype)</h3>
+      <p id="modal-body" class="helper"></p>
+      <div class="row">
+        <a id="modal-mailto" class="btn" href="#">Open email draft</a>
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
