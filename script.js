@@ -1,183 +1,204 @@
-const boundaryScenarios = [
+const allBoundaryScenarios = [
   {
-    id: "b1",
-    prompt:
-      "A plan starts to feel less safe or less comfortable than expected, but the rest of the group still wants to continue.",
+    id: "b-budget-shift",
+    prompt: "Your group planned a casual $25 dinner, but once you arrive, everyone starts leaning toward a much more expensive place nearby.",
+    options: [
+      { label: "Go along with it to stay with the group", scores: { directness: 1, harmony: 5, deescalation: 2 } },
+      { label: "Remind everyone of the original budget", scores: { directness: 5, harmony: 2, deescalation: 3 } },
+      { label: "Suggest a different place that still feels fun", scores: { directness: 3, harmony: 4, deescalation: 4 } },
+      { label: "Split off for this meal and rejoin later", scores: { directness: 4, harmony: 2, deescalation: 5 } }
+    ]
+  },
+  {
+    id: "b-energy-mismatch",
+    prompt: "It is the middle of a packed day. Some travelers want to keep sightseeing, while others are clearly worn out.",
+    options: [
+      { label: "Keep following the full plan", scores: { directness: 4, harmony: 2, deescalation: 2 } },
+      { label: "Suggest cutting one or two stops", scores: { directness: 3, harmony: 4, deescalation: 4 } },
+      { label: "Split up and reconnect later", scores: { directness: 3, harmony: 3, deescalation: 5 } },
+      { label: "Let the majority decide", scores: { directness: 2, harmony: 5, deescalation: 3 } }
+    ]
+  },
+  {
+    id: "b-transit-delay",
+    prompt: "A delayed train means you now have to choose between a fast expensive option and a slow cheaper one.",
+    options: [
+      { label: "Pay more and keep the trip moving", scores: { directness: 4, harmony: 3, deescalation: 2 } },
+      { label: "Wait and protect the budget", scores: { directness: 3, harmony: 3, deescalation: 3 } },
+      { label: "Look for a creative third option", scores: { directness: 3, harmony: 4, deescalation: 5 } },
+      { label: "Let different people choose different routes", scores: { directness: 2, harmony: 4, deescalation: 4 } }
+    ]
+  },
+  {
+    id: "b-group-friction",
+    prompt: "Two travelers strongly disagree about what to do next, and the mood is starting to affect everyone.",
+    options: [
+      { label: "Choose a side to move things forward", scores: { directness: 5, harmony: 2, deescalation: 2 } },
+      { label: "Mediate and help build a compromise", scores: { directness: 3, harmony: 4, deescalation: 5 } },
+      { label: "Stay neutral and let it play out", scores: { directness: 1, harmony: 4, deescalation: 3 } },
+      { label: "Step away and keep doing your own thing", scores: { directness: 2, harmony: 2, deescalation: 4 } }
+    ]
+  },
+  {
+    id: "b-late-night",
+    prompt: "The group wants to stay out much later than expected, but you are thinking about tomorrow's plans.",
+    options: [
+      { label: "Stay out and adjust tomorrow later", scores: { directness: 2, harmony: 5, deescalation: 2 } },
+      { label: "Leave early and stick to your plan", scores: { directness: 5, harmony: 2, deescalation: 3 } },
+      { label: "Suggest a shorter version of the night", scores: { directness: 3, harmony: 4, deescalation: 4 } },
+      { label: "Go with whatever the group wants", scores: { directness: 1, harmony: 5, deescalation: 3 } }
+    ]
+  },
+  {
+    id: "b-plan-break",
+    prompt: "You arrive and find out a reservation was lost. The next best option is less convenient and not what the group expected.",
+    options: [
+      { label: "Take charge and quickly pick a new plan", scores: { directness: 5, harmony: 3, deescalation: 3 } },
+      { label: "Pause and compare a few alternatives first", scores: { directness: 3, harmony: 4, deescalation: 4 } },
+      { label: "Go with the easiest available option", scores: { directness: 2, harmony: 4, deescalation: 5 } },
+      { label: "Let someone else handle it", scores: { directness: 1, harmony: 4, deescalation: 3 } }
+    ]
+  },
+  {
+    id: "b-unexpected-spend",
+    prompt: "A spontaneous activity pops up that looks incredible, but it would use money you had mentally saved for later in the trip.",
+    options: [
+      { label: "Say yes — the moment is worth it", scores: { directness: 3, harmony: 4, deescalation: 2 } },
+      { label: "Skip it and protect the bigger plan", scores: { directness: 4, harmony: 2, deescalation: 3 } },
+      { label: "Look for a cheaper version of the experience", scores: { directness: 3, harmony: 4, deescalation: 5 } },
+      { label: "Join only if other people are also doing it", scores: { directness: 1, harmony: 5, deescalation: 3 } }
+    ]
+  },
+  {
+    id: "b-morning-pace",
+    prompt: "Checkout is approaching. Some people are still moving slowly, while you are focused on making the next step of the trip work smoothly.",
+    options: [
+      { label: "Start organizing everyone and moving things along", scores: { directness: 5, harmony: 2, deescalation: 2 } },
+      { label: "Handle your own things and let others sort themselves out", scores: { directness: 3, harmony: 3, deescalation: 4 } },
+      { label: "Keep the mood light while nudging people forward", scores: { directness: 3, harmony: 5, deescalation: 4 } },
+      { label: "Accept the slower pace and adjust the day around it", scores: { directness: 2, harmony: 4, deescalation: 5 } }
+    ]
+  },
+  {
+    id: "b-weather-pivot",
+    prompt: "Bad weather wipes out the original plan. The group now needs to pivot quickly.",
+    options: [
+      { label: "Immediately build a new indoor plan", scores: { directness: 5, harmony: 3, deescalation: 3 } },
+      { label: "Use the day to slow down and improvise", scores: { directness: 2, harmony: 4, deescalation: 5 } },
+      { label: "Ask everyone what they most want to salvage", scores: { directness: 3, harmony: 5, deescalation: 4 } },
+      { label: "Stick as closely as possible to the original spirit of the plan", scores: { directness: 4, harmony: 3, deescalation: 2 } }
+    ]
+  },
+  {
+    id: "b-boundary-moment",
+    prompt: "A plan starts to feel less safe or less comfortable than expected, but the rest of the group still wants to continue.",
     options: [
       { label: "Say no clearly and step back", scores: { directness: 5, harmony: 2, deescalation: 2 } },
       { label: "Suggest a safer alternative everyone could still enjoy", scores: { directness: 3, harmony: 4, deescalation: 4 } },
       { label: "Go along with it to avoid disrupting the group", scores: { directness: 1, harmony: 5, deescalation: 3 } },
-      { label: "Leave quietly without making it a big issue", scores: { directness: 2, harmony: 3, deescalation: 5 } }
+      { label: "Leave the plan quietly without making it a big issue", scores: { directness: 2, harmony: 3, deescalation: 5 } }
     ]
   },
   {
-    id: "b2",
-    prompt: "The group realizes you are over budget for the day and someone suggests a pricey activity anyway.",
+    id: "b-open-day",
+    prompt: "The group has a fully open day with no set plan. Everyone is waiting for someone to establish a direction.",
     options: [
-      { label: "Vote no and propose a cheaper swap", scores: { directness: 5, harmony: 2, deescalation: 3 } },
-      { label: "Split up: whoever wants to go can, others opt out", scores: { directness: 3, harmony: 3, deescalation: 4 } },
-      { label: "Say yes to keep the vibe even if it stings", scores: { directness: 2, harmony: 5, deescalation: 2 } },
-      { label: "Avoid deciding and hope someone else speaks up", scores: { directness: 1, harmony: 4, deescalation: 4 } }
-    ]
-  },
-  {
-    id: "b3",
-    prompt: "Half the group wants a packed morning; the other half wants to sleep in.",
-    options: [
-      { label: "Pick one plan for everyone", scores: { directness: 4, harmony: 2, deescalation: 2 } },
-      { label: "Split into two tracks and meet later", scores: { directness: 3, harmony: 3, deescalation: 5 } },
-      { label: "Defer to whoever feels strongest", scores: { directness: 2, harmony: 5, deescalation: 3 } },
-      { label: "Cancel the morning block to avoid conflict", scores: { directness: 2, harmony: 4, deescalation: 4 } }
-    ]
-  },
-  {
-    id: "b4",
-    prompt: "Someone in the group is running late and the whole day’s timing is slipping.",
-    options: [
-      { label: "Reset expectations out loud and cut an activity", scores: { directness: 5, harmony: 2, deescalation: 3 } },
-      { label: "Quietly compress the schedule as you go", scores: { directness: 2, harmony: 4, deescalation: 4 } },
-      { label: "Rush everyone to keep the original plan", scores: { directness: 4, harmony: 2, deescalation: 2 } },
-      { label: "Let it slide and improvise without addressing it", scores: { directness: 1, harmony: 5, deescalation: 3 } }
-    ]
-  },
-  {
-    id: "b5",
-    prompt: "Two people disagree in front of the group and the mood gets tense.",
-    options: [
-      { label: "Name the tension and suggest a quick decision rule", scores: { directness: 5, harmony: 2, deescalation: 4 } },
-      { label: "Suggest taking a short break and revisiting", scores: { directness: 3, harmony: 4, deescalation: 5 } },
-      { label: "Make a light joke to reset the vibe", scores: { directness: 2, harmony: 5, deescalation: 3 } },
-      { label: "Stay quiet and wait for it to pass", scores: { directness: 1, harmony: 4, deescalation: 3 } }
+      { label: "Build a clear plan for the day", scores: { directness: 5, harmony: 3, deescalation: 2 } },
+      { label: "Start moving and let the day unfold naturally", scores: { directness: 3, harmony: 3, deescalation: 4 } },
+      { label: "Ask what each person most wants, then blend it", scores: { directness: 3, harmony: 5, deescalation: 4 } },
+      { label: "Wait until someone else sets the tone", scores: { directness: 1, harmony: 4, deescalation: 3 } }
     ]
   }
 ];
 
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let boundaryScenarios = shuffleArray(allBoundaryScenarios).slice(0, 10);
+
 const fakeTravelers = [
   {
-    id: "ft-sd-1",
+    id: "ft-1",
     name: "Riley Chen",
     bio: "Weekend trips, loves sunrise hikes and taco crawls.",
-    destination: "San Diego",
     tripWindow: "Spring break",
-    avatarUrl: "https://i.pravatar.cc/150?u=ft-sd-1",
-    pace: 4,
-    budget: 3,
-    social: 4,
-    directness: 4,
-    harmony: 3,
-    deescalation: 3,
+    avatarUrl: "https://i.pravatar.cc/150?u=ft-1",
+    pace: 4, budget: 3, social: 4,
+    directness: 4, harmony: 3, deescalation: 3,
     boundaryTags: ["Speaks up early", "Splits plans when needed"],
-    mustHaves: ["one hike", "local food"],
-    hardNos: ["late-night clubs"],
-    flexAreas: ["museum block"]
+    mustHaves: ["one hike", "local food"], hardNos: ["late-night clubs"], flexAreas: ["museum block"]
   },
   {
-    id: "ft-sd-2",
+    id: "ft-2",
     name: "Sam Ortiz",
     bio: "Chill beach days, strict daily spend cap.",
-    destination: "San Diego",
     tripWindow: "May",
-    avatarUrl: "https://i.pravatar.cc/150?u=ft-sd-2",
-    pace: 2,
-    budget: 2,
-    social: 3,
-    directness: 3,
-    harmony: 4,
-    deescalation: 4,
+    avatarUrl: "https://i.pravatar.cc/150?u=ft-2",
+    pace: 2, budget: 2, social: 3,
+    directness: 3, harmony: 4, deescalation: 4,
     boundaryTags: ["Budget-first", "Avoids confrontation"],
-    mustHaves: ["beach time"],
-    hardNos: ["packed itineraries"],
-    flexAreas: ["dinner"]
+    mustHaves: ["beach time"], hardNos: ["packed itineraries"], flexAreas: ["dinner"]
   },
   {
-    id: "ft-tokyo",
+    id: "ft-3",
     name: "Jordan Park",
-    bio: "First Japan trip—wants structure + one flex day.",
-    destination: "Tokyo",
+    bio: "Wants structure with at least one flex day built in.",
     tripWindow: "June",
-    avatarUrl: "https://i.pravatar.cc/150?u=ft-tokyo",
-    pace: 4,
-    budget: 4,
-    social: 3,
-    directness: 4,
-    harmony: 3,
-    deescalation: 3,
+    avatarUrl: "https://i.pravatar.cc/150?u=ft-3",
+    pace: 4, budget: 4, social: 3,
+    directness: 4, harmony: 3, deescalation: 3,
     boundaryTags: ["Direct about time", "Safety-first"],
-    mustHaves: ["one day trip out of city"],
-    hardNos: ["hostels"],
-    flexAreas: ["shopping"]
+    mustHaves: ["one day trip out of area"], hardNos: ["hostels"], flexAreas: ["shopping"]
   },
   {
-    id: "ft-austin",
+    id: "ft-4",
     name: "Alex Morgan",
-    bio: "Music + food; happy to split the group.",
-    destination: "Austin",
+    bio: "Music + food; happy to split the group sometimes.",
     tripWindow: "March",
-    avatarUrl: "https://i.pravatar.cc/150?u=ft-austin",
-    pace: 3,
-    budget: 3,
-    social: 5,
-    directness: 3,
-    harmony: 4,
-    deescalation: 4,
+    avatarUrl: "https://i.pravatar.cc/150?u=ft-4",
+    pace: 3, budget: 3, social: 5,
+    directness: 3, harmony: 4, deescalation: 4,
     boundaryTags: ["Group-vibe first", "Uses breaks to cool tension"],
-    mustHaves: ["live music night"],
-    hardNos: ["all-day driving"],
-    flexAreas: ["brunch"]
+    mustHaves: ["live music night"], hardNos: ["all-day driving"], flexAreas: ["brunch"]
   },
   {
-    id: "ft-denver",
+    id: "ft-5",
     name: "Casey Lee",
     bio: "Outdoor-heavy, early starts, packs snacks to save money.",
-    destination: "Denver",
     tripWindow: "July",
-    avatarUrl: "https://i.pravatar.cc/150?u=ft-denver",
-    pace: 5,
-    budget: 2,
-    social: 2,
-    directness: 5,
-    harmony: 2,
-    deescalation: 3,
+    avatarUrl: "https://i.pravatar.cc/150?u=ft-5",
+    pace: 5, budget: 2, social: 2,
+    directness: 5, harmony: 2, deescalation: 3,
     boundaryTags: ["Says no clearly", "Prefers honest tradeoffs"],
-    mustHaves: ["one big hike"],
-    hardNos: ["fancy dinners every night"],
-    flexAreas: ["coffee stops"]
+    mustHaves: ["one big hike"], hardNos: ["fancy dinners every night"], flexAreas: ["coffee stops"]
   },
   {
-    id: "ft-miami",
+    id: "ft-6",
     name: "Taylor Brooks",
     bio: "Social trip—wants group dinners and beach afternoons.",
-    destination: "Miami",
     tripWindow: "April",
-    avatarUrl: "https://i.pravatar.cc/150?u=ft-miami",
-    pace: 3,
-    budget: 4,
-    social: 5,
-    directness: 2,
-    harmony: 5,
-    deescalation: 3,
+    avatarUrl: "https://i.pravatar.cc/150?u=ft-6",
+    pace: 3, budget: 4, social: 5,
+    directness: 2, harmony: 5, deescalation: 3,
     boundaryTags: ["Keeps peace", "Flexible on details"],
-    mustHaves: ["group dinner"],
-    hardNos: ["splitting all day solo"],
-    flexAreas: ["nightlife"]
+    mustHaves: ["group dinner"], hardNos: ["splitting all day solo"], flexAreas: ["nightlife"]
   },
   {
-    id: "ft-portland",
+    id: "ft-7",
     name: "Morgan Reed",
     bio: "Slow mornings, coffee shops, one museum day.",
-    destination: "Portland",
     tripWindow: "Fall",
-    avatarUrl: "https://i.pravatar.cc/150?u=ft-portland",
-    pace: 2,
-    budget: 3,
-    social: 4,
-    directness: 3,
-    harmony: 4,
-    deescalation: 5,
+    avatarUrl: "https://i.pravatar.cc/150?u=ft-7",
+    pace: 2, budget: 3, social: 4,
+    directness: 3, harmony: 4, deescalation: 5,
     boundaryTags: ["De-escalates", "Prefers breaks over debates"],
-    mustHaves: ["farmers market"],
-    hardNos: ["early flights"],
-    flexAreas: ["neighborhood walks"]
+    mustHaves: ["farmers market"], hardNos: ["early flights"], flexAreas: ["neighborhood walks"]
   }
 ];
 
@@ -232,7 +253,7 @@ function renderBoundaryQuestions() {
     const block = document.createElement("div");
     block.className = "question-item boundary-item";
     const prompt = document.createElement("p");
-    prompt.textContent = `Boundary ${index + 1} of ${boundaryScenarios.length}: ${scenario.prompt}`;
+    prompt.textContent = `Question ${index + 1} of ${boundaryScenarios.length}: ${scenario.prompt}`;
     block.appendChild(prompt);
 
     scenario.options.forEach((opt, optIndex) => {
@@ -331,13 +352,6 @@ function renderQuestions() {
   });
 }
 
-function destinationMatches(userDest, travelerDest) {
-  const a = (userDest || "").toLowerCase().trim();
-  const b = (travelerDest || "").toLowerCase().trim();
-  if (!a || !b) return false;
-  return a.includes(b) || b.includes(a);
-}
-
 function scoreSimilarity(traveler) {
   const uPace = state.selfScores.pace;
   const uBudget = state.selfScores.budget;
@@ -354,26 +368,13 @@ function scoreSimilarity(traveler) {
   const bde = Math.abs(bp.deescalation - traveler.deescalation);
   const boundaryDist = bd + bh + bde;
 
-  let bonus = 0;
-  if (destinationMatches(state.destination, traveler.destination)) bonus -= 1.5;
-
-  const userTags = new Set((state.boundaryProfile?.tags || []).map(normalizeItem));
-  (traveler.boundaryTags || []).forEach((t) => {
-    if ([...userTags].some((u) => normalizeItem(t).includes(u) || u.includes(normalizeItem(t)))) {
-      bonus -= 0.4;
-    }
-  });
-
-  return alignDist * 1.2 + boundaryDist * 0.8 + bonus;
+  return alignDist * 1.2 + boundaryDist * 0.8;
 }
 
 function explainMatch(traveler) {
   const reasons = [];
-  if (destinationMatches(state.destination, traveler.destination)) {
-    reasons.push(`Similar destination intent (${traveler.destination})`);
-  } else {
-    reasons.push("Shown for score fit (try matching your destination in step 1 for tighter results)");
-  }
+  const dest = state.destination || "your destination";
+  reasons.push(`Also planning a trip to ${dest}`);
 
   const paceD = Math.abs(state.selfScores.pace - traveler.pace);
   if (paceD <= 1) reasons.push("Similar trip pace");
@@ -404,7 +405,7 @@ function travelerToComparable(t) {
     mustHaves: t.mustHaves || [],
     hardNos: t.hardNos || [],
     flexAreas: t.flexAreas || [],
-    destination: t.destination,
+    destination: state.destination,
     tripWindow: t.tripWindow,
     avatarUrl: t.avatarUrl,
     boundaryTags: t.boundaryTags || []
@@ -413,13 +414,14 @@ function travelerToComparable(t) {
 
 function renderDiscovery() {
   const feed = document.getElementById("discovery-feed");
+  const dest = state.destination || "your destination";
   const ranked = fakeTravelers
     .map((t) => ({ t, score: scoreSimilarity(t) }))
     .sort((a, b) => a.score - b.score);
 
-  feed.innerHTML = "<h3 class=\"discovery-title\">Suggested travelers</h3>";
+  feed.innerHTML = `<h3 class="discovery-title">Travelers also heading to ${dest}</h3>`;
 
-  ranked.forEach(({ t, score }) => {
+  ranked.forEach(({ t }) => {
     const card = document.createElement("div");
     card.className = "discovery-card";
     const selected = state.discoverySelectedIds.includes(t.id);
@@ -431,7 +433,7 @@ function renderDiscovery() {
         <div class="discovery-card-head">
           <h3>${t.name}</h3>
           <p class="meta">${t.bio}</p>
-          <p class="meta"><strong>${t.destination}</strong> · ${t.tripWindow} · Pace ${t.pace} · Budget ${t.budget} · Social ${t.social}</p>
+          <p class="meta"><strong>${dest}</strong> · ${t.tripWindow} · Pace ${t.pace} · Budget ${t.budget} · Social ${t.social}</p>
         </div>
       </div>
       <p class="meta"><strong>Boundary style:</strong> ${(t.boundaryTags || []).join(" · ")}</p>
@@ -609,12 +611,8 @@ function addCustomTeammate() {
     id: `custom-${customTeammateCounter}`,
     name: `${name} (Added)`,
     description: "Custom teammate profile",
-    pace,
-    budget,
-    social,
-    mustHaves,
-    hardNos,
-    flexAreas
+    pace, budget, social,
+    mustHaves, hardNos, flexAreas
   });
   customTeammateCounter += 1;
 
@@ -874,6 +872,8 @@ function resetFlow() {
   state.userPrefs = { mustHaves: [], hardNos: [], flexAreas: [] };
   state.discoverySelectedIds = [];
   customTeammateCounter = 1;
+
+  boundaryScenarios = shuffleArray(allBoundaryScenarios).slice(0, 10);
 
   document.getElementById("destination").value = "";
   document.getElementById("days").value = "4";
