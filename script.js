@@ -196,7 +196,8 @@ const questions = [
 const state = {
   destination: "",
   days: 4,
-  groupSize: 3,
+  groupSizeCurrent: 3,
+  groupSizeIdeal: 4,
   answers: {},
   boundaryAnswers: {},
   boundaryProfile: null,
@@ -662,8 +663,16 @@ function renderResultHeader(groups) {
   const watchCount = groups.filter((g) => g.level.label === "Watch").length;
   const bp = state.boundaryProfile;
 
+  const gc = state.groupSizeCurrent;
+  const gi = state.groupSizeIdeal;
+  const groupSizeLine =
+    gc === gi
+      ? `<p><strong>Group size:</strong> ${gc} current · ${gi} ideal (same)</p>`
+      : `<p><strong>Group size:</strong> ${gc} current · ${gi} ideal (${gi > gc ? `room for about ${gi - gc} more` : `${gc - gi} over ideal—discuss trimming or sub-groups`})</p>`;
+
   header.innerHTML = `
     <h3>Trip Room: ${destination} (${state.days} days)</h3>
+    ${groupSizeLine}
     <p><strong>Group Snapshot:</strong> ${state.selectedTeammates.length + 1} travelers compared.</p>
     <p><strong>Friction signals:</strong> ${riskCount} high-risk, ${watchCount} medium-risk variable(s).</p>
     ${
@@ -773,6 +782,12 @@ function renderTensionPoints(groups, people) {
     items.push("No direct must-have vs hard no conflicts were detected.");
   }
 
+  if (state.groupSizeCurrent !== state.groupSizeIdeal) {
+    items.push(
+      `Current group (${state.groupSizeCurrent}) and ideal group (${state.groupSizeIdeal}) differ—confirm if you are recruiting more people, shrinking the trip, or OK with a flexible headcount.`
+    );
+  }
+
   tension.innerHTML = `
     <h3>Tension Forecast</h3>
     <ul>${items.map((i) => `<li>${i}</li>`).join("")}</ul>
@@ -829,6 +844,7 @@ function renderTripPact(groups, selfScores, people) {
     <h3>Your Trip Alignment Pact</h3>
     <ul>
       <li><strong>Destination:</strong> ${state.destination}</li>
+      <li><strong>Group size:</strong> ${state.groupSizeCurrent} current · ${state.groupSizeIdeal} ideal</li>
       <li><strong>Your baseline profile:</strong> pace ${selfScores.pace}, budget ${selfScores.budget}, social ${selfScores.social}</li>
       ${
         state.boundaryProfile
@@ -847,7 +863,8 @@ function renderTripPact(groups, selfScores, people) {
 function resetFlow() {
   state.destination = "";
   state.days = 4;
-  state.groupSize = 3;
+  state.groupSizeCurrent = 3;
+  state.groupSizeIdeal = 4;
   state.answers = {};
   state.boundaryAnswers = {};
   state.boundaryProfile = null;
@@ -860,7 +877,8 @@ function resetFlow() {
 
   document.getElementById("destination").value = "";
   document.getElementById("days").value = "4";
-  document.getElementById("group-size").value = "3";
+  document.getElementById("group-size-current").value = "3";
+  document.getElementById("group-size-ideal").value = "4";
   document.getElementById("new-name").value = "";
   document.getElementById("new-pace").value = "3";
   document.getElementById("new-budget").value = "3";
@@ -892,7 +910,8 @@ function init() {
   document.getElementById("to-boundary").addEventListener("click", () => {
     const destination = document.getElementById("destination").value.trim();
     const days = Number(document.getElementById("days").value);
-    const groupSize = Number(document.getElementById("group-size").value);
+    const groupSizeCurrent = Number(document.getElementById("group-size-current").value);
+    const groupSizeIdeal = Number(document.getElementById("group-size-ideal").value);
 
     if (!destination) {
       alert("Please add a destination to continue.");
@@ -901,7 +920,8 @@ function init() {
 
     state.destination = destination;
     state.days = days || 4;
-    state.groupSize = groupSize || 3;
+    state.groupSizeCurrent = groupSizeCurrent >= 1 && groupSizeCurrent <= 12 ? groupSizeCurrent : 3;
+    state.groupSizeIdeal = groupSizeIdeal >= 1 && groupSizeIdeal <= 12 ? groupSizeIdeal : 4;
     updateBoundaryPreview();
     showStep("step-boundary");
   });

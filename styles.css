@@ -73,6 +73,14 @@ h2 {
   color: var(--muted);
 }
 
+.field-hint {
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
