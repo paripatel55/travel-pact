@@ -1,4 +1,4 @@
-# Trip Alignment Pact
+# BondVoyage
 
 A simple web experience for pre-trip alignment in student travel groups.
 
@@ -6,7 +6,7 @@ A simple web experience for pre-trip alignment in student travel groups.
 
 - Surfaces three variables: trip pace, budget flexibility, social style
 - Lets you compare your answers with traveler profiles
-- Generates a tension forecast and a Trip Alignment Pact
+- Generates a tension forecast and a shared alignment pact
 
 ## Run locally
 

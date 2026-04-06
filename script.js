@@ -236,7 +236,7 @@ const variableLabels = {
   social: "Social Style"
 };
 
-const stepIds = ["step-1", "step-boundary", "step-2", "step-3", "step-4"];
+const stepIds = ["step-landing", "step-1", "step-boundary", "step-2", "step-3", "step-4"];
 
 function showStep(targetId) {
   stepIds.forEach((id) => {
@@ -487,10 +487,10 @@ function openConnectModal(name, id) {
   const mail = document.getElementById("modal-mailto");
   const dest = state.destination || "our trip";
   body.textContent =
-    `This is a prototype—there is no in-app chat. You can reach out by email or text outside the app. Suggested opener: "Hi ${name}, I saw we had overlapping plans for ${dest} on Trip Alignment Pact."`;
-  const subject = encodeURIComponent(`Trip Alignment Pact — connect with ${name}`);
+    `There is no in-app chat yet—you can reach out by email or text. Suggested opener: "Hi ${name}, I saw we had overlapping plans for ${dest} on BondVoyage."`;
+  const subject = encodeURIComponent(`BondVoyage — connect with ${name}`);
   const bodyText = encodeURIComponent(
-    `Hi ${name},\n\nI'm planning something in ${dest} and we had a strong fit on Trip Alignment Pact. Would you be open to a quick chat about travel style?\n\nThanks!`
+    `Hi ${name},\n\nI'm planning something in ${dest} and we had a strong fit on BondVoyage. Would you be open to a quick chat about travel style?\n\nThanks!`
   );
   mail.href = `mailto:?subject=${subject}&body=${bodyText}`;
   modal.classList.add("modal-open");
@@ -839,7 +839,7 @@ function renderTripPact(groups, selfScores, people) {
     .slice(0, 4);
 
   pact.innerHTML = `
-    <h3>Your Trip Alignment Pact</h3>
+    <h3>Your BondVoyage pact</h3>
     <ul>
       <li><strong>Destination:</strong> ${state.destination}</li>
       <li><strong>Group size:</strong> ${state.groupSizeCurrent} current · ${state.groupSizeIdeal} ideal</li>
@@ -895,7 +895,7 @@ function resetFlow() {
   renderDiscovery();
   renderCustomChips();
   renderSelfScoreBlocks(state.selfScores);
-  showStep("step-1");
+  showStep("step-landing");
 }
 
 function init() {
@@ -906,6 +906,14 @@ function init() {
 
   document.getElementById("question-form").addEventListener("change", updateSelfScoresFromForm);
   document.getElementById("boundary-form").addEventListener("change", updateBoundaryPreview);
+
+  document.getElementById("landing-start").addEventListener("click", () => {
+    showStep("step-1");
+  });
+
+  document.getElementById("back-to-landing").addEventListener("click", () => {
+    showStep("step-landing");
+  });
 
   document.getElementById("to-boundary").addEventListener("click", () => {
     const destination = document.getElementById("destination").value.trim();

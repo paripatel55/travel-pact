@@ -9,6 +9,8 @@
   --ok: #147a4a;
   --warn: #b77900;
   --risk: #b42318;
+  --landing-ink: #1c1930;
+  --orbit-r: clamp(118px, 34vw, 156px);
 }
 
 * {
@@ -17,7 +19,7 @@
 
 body {
   margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Outfit, system-ui, sans-serif;
   background: linear-gradient(160deg, #f8faff 0%, #eef2ff 100%);
   color: var(--ink);
 }
@@ -62,6 +64,13 @@ h1 {
 
 .step.active {
   display: block;
+}
+
+.landing.step.active {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 h2 {
@@ -378,4 +387,280 @@ ul {
 
 .modal-panel .row {
   margin-top: 16px;
+}
+
+.landing.step:not(.active) {
+  display: none;
+}
+
+.landing {
+  background:
+    radial-gradient(ellipse 120% 80% at 20% 20%, rgba(253, 186, 223, 0.55), transparent 55%),
+    radial-gradient(ellipse 90% 70% at 85% 15%, rgba(186, 230, 253, 0.65), transparent 50%),
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(209, 250, 229, 0.5), transparent 45%),
+    linear-gradient(165deg, #fdf8fc 0%, #f0f4ff 45%, #e8faf5 100%);
+  color: var(--landing-ink);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.landing-topbar {
+  padding: 20px clamp(20px, 4vw, 48px) 8px;
+}
+
+.landing-brand-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #050508;
+  border-radius: 14px;
+  padding: 8px clamp(14px, 3.5vw, 20px);
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.12);
+}
+
+.landing-brand-img {
+  display: block;
+  height: clamp(28px, 7vw, 34px);
+  width: auto;
+  max-width: min(220px, 72vw);
+}
+
+.landing-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px clamp(20px, 5vw, 48px) 48px;
+  max-width: 520px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.orbit-stage {
+  position: relative;
+  width: min(92vw, 400px);
+  height: min(92vw, 400px);
+  margin: 0 auto 1.25rem;
+  --orbit-r: clamp(118px, 34vw, 158px);
+}
+
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.08);
+}
+
+.orbit-ring--outer {
+  inset: 0;
+  animation: ring-breathe 5s ease-in-out infinite;
+}
+
+.orbit-ring--mid {
+  inset: 10%;
+  animation: ring-breathe 5s ease-in-out infinite 0.35s;
+  opacity: 0.75;
+}
+
+.orbit-ring--inner {
+  inset: 19%;
+  animation: ring-breathe 5s ease-in-out infinite 0.7s;
+  opacity: 0.55;
+}
+
+@keyframes ring-breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 0.75;
+  }
+}
+
+.orbit-spin {
+  position: absolute;
+  inset: 0;
+  animation: orbit-spin 32s linear infinite;
+  z-index: 1;
+}
+
+@keyframes orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbit-slot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--angle)) translateY(calc(-1 * var(--orbit-r)));
+}
+
+.orbit-icon-box {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  margin-left: -23px;
+  margin-top: -23px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 4px 16px rgba(99, 102, 241, 0.12),
+    0 2px 6px rgba(15, 23, 42, 0.06);
+  color: #7c6cf0;
+  animation: orbit-counter 32s linear infinite;
+}
+
+@keyframes orbit-counter {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.orbit-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.brand-hub {
+  position: absolute;
+  inset: 23%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #1a1228 0%, #050508 62%, #020204 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(14px, 4vw, 22px);
+  z-index: 2;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 36px rgba(99, 102, 241, 0.35),
+    0 0 64px rgba(34, 211, 238, 0.22);
+  animation: hub-glow 6s ease-in-out infinite alternate;
+}
+
+@keyframes hub-glow {
+  0% {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.09),
+      0 0 32px rgba(167, 139, 250, 0.4),
+      0 0 58px rgba(34, 211, 238, 0.2);
+  }
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.07),
+      0 0 46px rgba(236, 72, 153, 0.35),
+      0 0 78px rgba(99, 102, 241, 0.38);
+  }
+}
+
+.brand-hub-logo {
+  width: min(78%, 210px);
+  height: auto;
+  display: block;
+}
+
+.landing-copy {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.landing-lead {
+  margin: 0 0 12px;
+  font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+  line-height: 1.55;
+  font-weight: 400;
+  color: rgba(28, 25, 48, 0.88);
+}
+
+.landing-lead strong {
+  font-weight: 600;
+  color: var(--landing-ink);
+}
+
+.landing-sub {
+  margin: 0;
+  font-size: clamp(0.85rem, 2.1vw, 0.95rem);
+  line-height: 1.5;
+  color: rgba(28, 25, 48, 0.62);
+}
+
+.landing-start {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  font-family: Outfit, sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 16px 40px 16px 36px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(115deg, #7c3aed 0%, #6366f1 38%, #22d3ee 100%);
+  background-size: 140% 100%;
+  box-shadow:
+    0 8px 28px rgba(99, 102, 241, 0.38),
+    0 2px 8px rgba(15, 23, 42, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  animation: cta-shimmer 8s ease-in-out infinite;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.landing-start:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow:
+    0 12px 36px rgba(99, 102, 241, 0.45),
+    0 4px 12px rgba(15, 23, 42, 0.14);
+}
+
+.landing-start:active {
+  transform: translateY(0);
+}
+
+@keyframes cta-shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.landing-start-arrow {
+  font-size: 1.15em;
+  line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-spin,
+  .orbit-icon-box,
+  .orbit-ring--outer,
+  .orbit-ring--mid,
+  .orbit-ring--inner,
+  .brand-hub,
+  .landing-start {
+    animation: none;
+  }
 }

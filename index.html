@@ -3,21 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trip Alignment Pact</title>
+  <title>BondVoyage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="app">
-    <header class="hero">
-      <p class="eyebrow">Pre-trip alignment</p>
-      <h1>Trip Alignment Pact</h1>
-      <p class="subtitle">
-        Find travelers planning similar trips, then check pace, budget, social style, and how you handle
-        tension—before you commit.
-      </p>
+  <section id="step-landing" class="landing step active" aria-label="Welcome">
+    <header class="landing-topbar">
+      <div class="landing-brand-chip">
+        <img src="bondvoyage-logo.png" alt="BondVoyage" class="landing-brand-img" width="200" height="56" decoding="async">
+      </div>
     </header>
 
-    <section id="step-1" class="card step active">
+    <div class="landing-main">
+      <div class="orbit-stage" aria-hidden="true">
+        <div class="orbit-ring orbit-ring--outer"></div>
+        <div class="orbit-ring orbit-ring--mid"></div>
+        <div class="orbit-ring orbit-ring--inner"></div>
+
+        <div class="orbit-spin">
+          <div class="orbit-slot" style="--angle: 0deg">
+            <div class="orbit-icon-box">
+              <svg class="orbit-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16v-4l-8-5-8 5v4l8 5 8-5z"/><path d="M3 12l8 5 8-5"/><path d="M12 22V12"/></svg>
+            </div>
+          </div>
+          <div class="orbit-slot" style="--angle: 72deg">
+            <div class="orbit-icon-box">
+              <svg class="orbit-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-4 3H4l-1 1 3 2 2 3 1-1v-2l3-4 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+            </div>
+          </div>
+          <div class="orbit-slot" style="--angle: 144deg">
+            <div class="orbit-icon-box">
+              <svg class="orbit-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8V6a2 2 0 012-2h6a2 2 0 012 2v2"/><path d="M7 16h.01M17 16h.01"/></svg>
+            </div>
+          </div>
+          <div class="orbit-slot" style="--angle: 216deg">
+            <div class="orbit-icon-box">
+              <svg class="orbit-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3.5"/><path d="M4.5 19.5c1.5-4 5-6 7.5-6s6 2 7.5 6"/><path d="M9 9a3 3 0 016 0"/></svg>
+            </div>
+          </div>
+          <div class="orbit-slot" style="--angle: 288deg">
+            <div class="orbit-icon-box">
+              <svg class="orbit-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="3"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="brand-hub" aria-label="BondVoyage">
+          <img src="bondvoyage-logo.png" alt="" class="brand-hub-logo" width="220" height="62" decoding="async">
+        </div>
+      </div>
+
+      <div class="landing-copy">
+        <p class="landing-lead">
+          BondVoyage reveals how you tend to travel when a trip gets squeezed by <strong>money</strong>,
+          <strong>timing</strong>, <strong>coordination</strong>, or <strong>group tension</strong> before you lock in plans.
+        </p>
+        <p class="landing-sub">
+          You get a composite profile, a destination-aware way to compare with other travelers, and a shared
+          alignment pact. Happy, safer trips start with clarity.
+        </p>
+      </div>
+
+      <button type="button" class="landing-start" id="landing-start">
+        Start
+        <span class="landing-start-arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </section>
+
+  <main class="app">
+    <section id="step-1" class="card step">
       <h2>1) Create Trip Room</h2>
       <p class="helper">Start with basic context so your preferences are grounded in one trip scenario.</p>
 
@@ -42,7 +100,10 @@
         </label>
       </div>
 
-      <button id="to-boundary" class="btn">Continue to Boundary Moments</button>
+      <div class="row">
+        <button id="back-to-landing" class="btn btn-secondary" type="button">← Home</button>
+        <button id="to-boundary" class="btn">Continue to Behavioral Scenarios</button>
+      </div>
     </section>
 
     <section id="step-boundary" class="card step">
@@ -137,12 +198,12 @@
       <div id="custom-teammate-chips" class="custom-chips"></div>
       <div class="row">
         <button id="back-to-alignment" class="btn btn-secondary" type="button">Back</button>
-        <button id="generate-results" class="btn" type="button">Generate Alignment + Trip Pact</button>
+        <button id="generate-results" class="btn" type="button">Generate alignment + pact</button>
       </div>
     </section>
 
     <section id="step-4" class="card step">
-      <h2>5) Results: Alignment + Trip Pact</h2>
+      <h2>5) Results: alignment + pact</h2>
       <div id="result-header" class="result-header"></div>
       <div id="alignment-table"></div>
       <div id="tension-points" class="result-block"></div>
@@ -157,7 +218,7 @@
   <div id="connect-modal" class="modal" aria-hidden="true">
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-panel" role="dialog" aria-labelledby="modal-title">
-      <h3 id="modal-title">Connect (prototype)</h3>
+      <h3 id="modal-title">Connect</h3>
       <p id="modal-body" class="helper"></p>
       <div class="row">
         <a id="modal-mailto" class="btn" href="#">Open email draft</a>
